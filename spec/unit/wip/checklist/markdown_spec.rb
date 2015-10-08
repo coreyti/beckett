@@ -13,13 +13,10 @@ module WIP::Checklist
 
           - [ ] step one
           - [ ] step two
-          - [ ] step 3
-          - [ ] step 4
-          - [ ] step 5
 
           ## Section 2:
 
-          content
+          Content
         CONTENT
       }
 
@@ -28,17 +25,19 @@ module WIP::Checklist
           expect(document.to_hash).to eq({
             :children => [
               {
-                :header=>"Welcome to the checklist wiki!",
-                :content=>["Intro text"]
+                header: "Welcome to the checklist wiki!",
+                content: ["Intro text"],
+                children: [
+                  {
+                    header: "Section 1:",
+                    content: ["[ ] step one\n", "[ ] step two\n"]
+                  },
+                  {
+                    header: "Section 2:",
+                    content: ["Content"]
+                  }
+                ]
               },
-              {
-                :header=>"Section 1:",
-                :content=>["[ ] step one\n", "[ ] step two\n", "[ ] step 3\n", "[ ] step 4\n", "[ ] step 5\n"]
-              },
-              {
-                :header=>"Section 2:",
-                :content=>["content"]
-              }
             ]
           })
         end
