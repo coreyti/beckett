@@ -8,13 +8,13 @@ module WIP
 
         def initialize
           # puts "Article..."
-          @article = Section.new(nil)
+          @article = Article.new
           @context = @article
           super
         end
 
         def to_h
-          @article.to_h
+          { body: @article.to_h }
         end
 
         # markdown blocks
@@ -23,6 +23,11 @@ module WIP
           last = @depth || 0
           @depth = level
           @context.rewind(1)
+
+          if last == 0
+            @context.header = text
+            return
+          end
 
           if @depth > last
             # puts "Descendant Section..."
@@ -66,9 +71,7 @@ module WIP
           text.match(/^#/) # prefixed with spaces? NO WORKY... no hash here
         end
 
-
-
-        class Section # < Hashie::Mash
+        class Section
           attr_reader :header, :children, :content
 
           def initialize(parent, header = nil)
@@ -82,6 +85,7 @@ module WIP
 
           def to_h
             {}.tap do |h|
+              h[:node_name] = node_name
               h[:header] = header if header
 
               if content.length > 0
@@ -110,6 +114,28 @@ module WIP
 
           def parent
             @parent || self
+          end
+
+          private
+
+          def node_name
+            'SECTION'
+          end
+        end
+
+        class Article < Section
+          def initialize(*)
+            super nil
+          end
+
+          def header=(text)
+            @header = text
+          end
+
+          private
+
+          def node_name
+            'ARTICLE'
           end
         end
       end

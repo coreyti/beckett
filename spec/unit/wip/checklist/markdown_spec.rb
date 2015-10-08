@@ -23,22 +23,23 @@ module WIP::Checklist
       describe '#to_hash' do
         it 'renders the content as a Hash' do
           expect(document.to_hash).to eq({
-            :children => [
-              {
-                header: "Welcome to the checklist wiki!",
-                content: ["Intro text"],
-                children: [
-                  {
-                    header: "Section 1:",
-                    content: ["[ ] step one\n", "[ ] step two\n"]
-                  },
-                  {
-                    header: "Section 2:",
-                    content: ["Content"]
-                  }
-                ]
-              },
-            ]
+            body: {
+              node_name:  "ARTICLE",
+              header:     "Welcome to the checklist wiki!",
+              content:    ["Intro text"],
+              children:   [
+                {
+                  node_name:  "SECTION",
+                  header:     "Section 1:",
+                  content:    ["[ ] step one\n", "[ ] step two\n"]
+                },
+                {
+                  node_name:  "SECTION",
+                  header:     "Section 2:",
+                  content:    ["Content"]
+                }
+              ]
+            }
           })
         end
       end
