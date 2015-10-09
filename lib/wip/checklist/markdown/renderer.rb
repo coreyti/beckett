@@ -7,8 +7,7 @@ module WIP
         attr_reader :context #, :article, :result
 
         def initialize
-          # puts "Article..."
-          @article = Article.new
+          @article = Node::Article.new(nil)
           @context = @article
           super
         end
@@ -19,124 +18,64 @@ module WIP
 
         # markdown blocks
         # --------------------------------------------------
+        # block_code(code, language)          # special? indent-specific
+        # block_quote(quote)                  # special? indent-specific
+        # block_html(raw_html)                # special? indent-specific
+        # footnotes(content)                  #
+        # footnote_def(content, number)       #
+        # header(text, header_level)          # special. section in/out.
+        # hrule()                             #
+        # list(contents, list_type)           # no sub-block, except LI
+        # list_item(text, list_type)          #
+        # paragraph(text)
+        # table(header, body)
+        # table_row(content)
+        # table_cell(content, alignment)
+
         def header(text, level)
-          last = @depth || 0
-          @depth = level
-          @context.rewind(1)
+          @context.header = text
+        end
 
-          if last == 0
-            @context.header = text
-            return
-          end
-
-          if @depth > last
-            # puts "Descendant Section..."
-            @context = Section.new(@context, text)
-          end
-
-          if @depth == last
-            # puts "Sibling Section..."
-            @context = Section.new(@context.parent, text)
-          end
-
+        def paragraph(text)
+          @context.paragraph(text)
           nil
         end
 
+
         # markdown spans
         # --------------------------------------------------
+        # autolink(link, link_type)
+        # codespan(code)
+        # double_emphasis(text)
+        # emphasis(text)
+        # image(link, title, alt_text)
+        # linebreak()
+        # link(link, title, content)
+        # raw_html(raw_html)
+        # triple_emphasis(text)
+        # strikethrough(text)
+        # superscript(text)
+        # underline(text)
+        # highlight(text)
+        # quote(text)
+        # footnote_ref(number)
 
 
         # markdown low-level
         # --------------------------------------------------
-        def entity(*args)
-          raise "entity: #{args.inspect}"
-        end
-
-        def normal_text(*args)
-          # puts "normal: #{args.inspect}"
-          @context << args[0] # unless is_header?(text)
-          args[0] # must return text, or it'll be stripped from headers, etc.
-        end
+        # doc_header()
+        # doc_footer()
+        # entity(text)
+        # normal_text(text)
 
 
-        # markdown callbacks
+        # markdown pre-/post-processing
         # --------------------------------------------------
+        # preprocess
+        # postprocess
+
         def postprocess(*)
           to_h
-        end
-
-        private
-
-        def is_header?(text)
-          text.match(/^#/) # prefixed with spaces? NO WORKY... no hash here
-        end
-
-        class Section
-          attr_reader :header, :children, :content
-
-          def initialize(parent, header = nil)
-            # puts "creating Section with header: #{header.inspect}"
-            @parent   = parent
-            @header   = header
-            @children = []
-            @content  = []
-            parent.children << self if parent
-          end
-
-          def to_h
-            {}.tap do |h|
-              h[:node_name] = node_name
-              h[:header] = header if header
-
-              if content.length > 0
-                h[:content] = []
-
-                content.each do |c|
-                  h[:content] << c
-                end
-              end
-
-              children.each  do |c|
-                h[:children] = (h[:children] || []) << c.to_h
-              end
-            end
-          end
-
-          def <<(text)
-            # puts "writing content: #{text} into #{header}"
-            content << text
-          end
-
-          def rewind(count)
-            removal = content.pop(count)
-            # puts "removed content: #{removal} from #{header}"
-          end
-
-          def parent
-            @parent || self
-          end
-
-          private
-
-          def node_name
-            'SECTION'
-          end
-        end
-
-        class Article < Section
-          def initialize(*)
-            super nil
-          end
-
-          def header=(text)
-            @header = text
-          end
-
-          private
-
-          def node_name
-            'ARTICLE'
-          end
         end
       end
     end

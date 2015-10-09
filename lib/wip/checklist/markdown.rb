@@ -1,5 +1,10 @@
 require 'wip/checklist/markdown/renderer'
 
+require 'wip/checklist/markdown/node'
+require 'wip/checklist/markdown/node/article'
+require 'wip/checklist/markdown/node/paragraph'
+require 'wip/checklist/markdown/node/text'
+
 # content  = File.read('/tmp/checklists/checklist.wiki/Home.md')
 # document = WIP::Checklist::Markdown::Document.new(content)
 # document.to_hash
