@@ -17,12 +17,6 @@ module WIP::Checklist
       def node_text
         nil
       end
-
-      # ---
-
-      # def paragraph(text)
-      #   parent.paragraph(text)
-      # end
     end
   end
 end

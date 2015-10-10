@@ -2,6 +2,7 @@ require 'wip/checklist/markdown/renderer'
 
 require 'wip/checklist/markdown/node'
 require 'wip/checklist/markdown/node/article'
+require 'wip/checklist/markdown/node/section'
 require 'wip/checklist/markdown/node/paragraph'
 require 'wip/checklist/markdown/node/text'
 

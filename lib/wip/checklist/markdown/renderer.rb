@@ -33,10 +33,25 @@ module WIP
         # table_cell(content, alignment)
 
         def header(text, level)
-          @context.header = text
+          if level == 1
+            @context.header = text
+          else
+            while( ! @context.allow?('SECTION', level))
+              @context = @context.parent
+            end
+
+            @context = @context.section(text, level)
+          end
+
+          nil
         end
 
         def paragraph(text)
+          while( ! @context.allow?('P'))
+            @context = @context.parent
+          end
+
+          # @context = @context.section(text, level)
           @context.paragraph(text)
           nil
         end

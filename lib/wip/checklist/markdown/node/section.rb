@@ -1,14 +1,16 @@
 module WIP::Checklist
   module Markdown
-    class Node::Article < Node
-      attr_accessor :header # hmm
+    class Node::Section < Node
+      attr_reader :header
 
       def initialize(parent, *args)
         super
+        @header = args[0]
+        @level  = args[1]
       end
 
       def node_name
-        'ARTICLE'
+        'SECTION'
       end
 
       def node_type
@@ -22,7 +24,11 @@ module WIP::Checklist
       # ---
 
       def allow?(name, level = 0)
-        true
+        if ['P'].include?(name)
+          return true
+        end
+
+        ['SECTION'].include?(name) && level > @level
       end
     end
   end
