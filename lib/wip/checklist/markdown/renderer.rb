@@ -1,96 +1,75 @@
-require 'redcarpet'
-
 module WIP
   module Checklist
     module Markdown
-      class Renderer < Redcarpet::Render::Base
-        attr_reader :context #, :article, :result
+      class Renderer < Kramdown::Converter::Base
+        DISPATCHER = Hash.new { |h, k| h[k] = "convert_#{k}" }
 
-        def initialize
-          @article = Node::Article.new(nil)
-          @context = @article
+        def initialize(root, options = {})
           super
+          @stack = []
         end
 
-        def to_h
-          { body: @article.to_h }
+        def debug(type, node)
+          # puts "convert #{type.inspect}:\n - #{node.inspect}"
         end
 
-        # markdown blocks
-        # --------------------------------------------------
-        # block_code(code, language)          # special? indent-specific
-        # block_quote(quote)                  # special? indent-specific
-        # block_html(raw_html)                # special? indent-specific
-        # footnotes(content)                  #
-        # footnote_def(content, number)       #
-        # header(text, header_level)          # special. section in/out.
-        # hrule()                             #
-        # list(contents, list_type)           # no sub-block, except LI
-        # list_item(text, list_type)          #
-        # paragraph(text)
-        # table(header, body)
-        # table_row(content)
-        # table_cell(content, alignment)
+        def convert(node)
+          result = send(DISPATCHER[node.type], node)
+          result ? result.to_h : nil
+        end
 
-        def header(text, level)
-          if level == 1
-            @context.header = text
-          else
-            while( ! @context.allow?('SECTION', level))
-              @context = @context.parent
-            end
+        private
 
-            @context = @context.section(text, level)
-          end
+        def convert_root(node)
+          debug(:root, node)
+          @root = node
+          Node.find(node).new(node, inner(node.children))
+        end
 
+        # ---
+
+        def convert_header(node)
+          debug(:header, node)
+          children = fragment(@root, node)
+          header   = children.shift
+          header   = Node::Header.new(header, inner(header.children))
+          Node::Article.new(node, [header.to_h] + inner(children))
+        end
+
+        def convert_p(node)
+          debug(:p, node)
+          Node.find(node).new(node, inner(node.children))
+        end
+
+        # ---
+
+        def convert_blank(node)
+          debug(:blank, node)
           nil
         end
 
-        def paragraph(text)
-          while( ! @context.allow?('P'))
-            @context = @context.parent
-          end
-
-          # @context = @context.section(text, level)
-          @context.paragraph(text)
-          nil
+        def convert_text(node)
+          debug(:text, node)
+          Node.find(node).new(node, nil)
         end
 
+        # ---
 
-        # markdown spans
-        # --------------------------------------------------
-        # autolink(link, link_type)
-        # codespan(code)
-        # double_emphasis(text)
-        # emphasis(text)
-        # image(link, title, alt_text)
-        # linebreak()
-        # link(link, title, content)
-        # raw_html(raw_html)
-        # triple_emphasis(text)
-        # strikethrough(text)
-        # superscript(text)
-        # underline(text)
-        # highlight(text)
-        # quote(text)
-        # footnote_ref(number)
+        def inner(children)
+          children.map { |child| convert(child) }.compact
+        end
 
+        def fragment(parent, context)
+          type  = context.type
+          level = context.options[:level]
+          nodes = parent.children
+          index = nodes.index(context)
+          tail  = nodes[(index + 1)..-1]
+          count = tail.index { |node|
+            node.type == type && (node.options[:level] == level)
+          } || tail.length()
 
-        # markdown low-level
-        # --------------------------------------------------
-        # doc_header()
-        # doc_footer()
-        # entity(text)
-        # normal_text(text)
-
-
-        # markdown pre-/post-processing
-        # --------------------------------------------------
-        # preprocess
-        # postprocess
-
-        def postprocess(*)
-          to_h
+          nodes[index..(index + count)]
         end
       end
     end

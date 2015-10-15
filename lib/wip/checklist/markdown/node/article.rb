@@ -1,28 +1,13 @@
-module WIP::Checklist
-  module Markdown
-    class Node::Article < Node
-      attr_accessor :header # hmm
+module WIP
+  module Checklist
+    module Markdown
+      class Node::Article < Node::Element
 
-      def initialize(parent, *args)
-        super
-      end
+        private
 
-      def node_name
-        'ARTICLE'
-      end
-
-      def node_type
-        1
-      end
-
-      def node_text
-        nil
-      end
-
-      # ---
-
-      def allow?(name, level = 0)
-        true
+        def node_name
+          'ARTICLE'
+        end
       end
     end
   end

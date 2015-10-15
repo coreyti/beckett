@@ -1,14 +1,15 @@
-require 'wip/checklist/markdown/renderer'
+require 'json'
+require 'kramdown'
 
+require 'wip/checklist/markdown/renderer'
 require 'wip/checklist/markdown/node'
+require 'wip/checklist/markdown/node/root'
+require 'wip/checklist/markdown/node/element'
 require 'wip/checklist/markdown/node/article'
 require 'wip/checklist/markdown/node/section'
-require 'wip/checklist/markdown/node/paragraph'
+require 'wip/checklist/markdown/node/header'
 require 'wip/checklist/markdown/node/text'
 
-# content  = File.read('/tmp/checklists/checklist.wiki/Home.md')
-# document = WIP::Checklist::Markdown::Document.new(content)
-# document.to_hash
 module WIP
   module Checklist
     module Markdown
@@ -18,8 +19,13 @@ module WIP
         end
 
         def to_hash
-          Redcarpet::Markdown.new(Renderer.new)
-            .render(@content)
+          document = Kramdown::Document.new(@content)
+          renderer = Renderer.send(:new, document.root)
+          renderer.convert(document.root)
+        end
+
+        def to_json
+          to_hash.to_json
         end
       end
     end

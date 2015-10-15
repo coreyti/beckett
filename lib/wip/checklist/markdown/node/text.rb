@@ -1,21 +1,28 @@
-module WIP::Checklist
-  module Markdown
-    class Node::Text < Node
-      def initialize(parent, *args)
-        super
-        @text = @args[0]
-      end
+module WIP
+  module Checklist
+    module Markdown
+      class Node::Text < Node::Base
+        def to_h
+          {}.tap do |element|
+            element[:node_name] = node_name
+            element[:node_type] = node_type
+            element[:node_text] = node_text
+          end
+        end
 
-      def node_name
-        '#text'
-      end
+        private
 
-      def node_type
-        3
-      end
+        def node_name
+          '#text'
+        end
 
-      def node_text
-        @text
+        def node_text
+          node.value
+        end
+
+        def node_type
+          3
+        end
       end
     end
   end
