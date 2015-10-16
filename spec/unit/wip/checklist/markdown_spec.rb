@@ -6,52 +6,24 @@ module WIP::Checklist
       let(:document) { Document.new(content) }
 
       describe '#to_hash' do
-        xcontext 'given ...' do
+        let(:rendered) { json(document.to_hash) }
+
+        context 'given ...' do
           let(:content)  { <<-CONTENT.strip_heredoc
             CONTENT
           }
 
           it 'renders' do
-            expect(document.to_hash).to eq({
-              body: {
-                node_name:  "ARTICLE",
-                node_type:  1
+            expect(rendered).to eq(json({
+              root: {
+                children: []
               }
-            })
+            }))
           end
         end
 
-        xcontext 'given ...' do
-          let(:content)  { <<-CONTENT.strip_heredoc
-              Paragraph
-            CONTENT
-          }
-
-          it 'renders' do
-            expect(document.to_hash).to eq({
-              body: {
-                node_name:  "ARTICLE",
-                node_type:  1,
-                children:   [
-                  {
-                    node_name: 'P',
-                    node_type: 1,
-                    children:  [
-                      {
-                        node_name: '#text',
-                        node_type: 3,
-                        node_text: 'Paragraph'
-                      }
-                    ]
-                  }
-                ]
-              }
-            })
-          end
-        end
-
-        xcontext 'given ...' do
-          let(:content)  { <<-CONTENT.strip_heredoc
+        context 'given...' do
+          let(:content) { <<-CONTENT.strip_heredoc
               Paragraph 1
 
               Paragraph 2
@@ -59,11 +31,9 @@ module WIP::Checklist
           }
 
           it 'renders' do
-            expect(document.to_hash).to eq({
-              body: {
-                node_name:  "ARTICLE",
-                node_type:  1,
-                children:   [
+            expect(rendered).to eq(json({
+              root: {
+                children: [
                   {
                     node_name: 'P',
                     node_type: 1,
@@ -88,27 +58,104 @@ module WIP::Checklist
                   }
                 ]
               }
-            })
+            }))
           end
         end
 
-        xcontext 'given ...' do
-          let(:content)  { <<-CONTENT.strip_heredoc
-              # Header
+        context 'given ...' do
+          let(:content) { <<-CONTENT.strip_heredoc
+              # Article A
 
-              Paragraph 1
+              Paragraph A1
 
-              Paragraph 2
+              # Article B
+
+              Paragraph B1
             CONTENT
           }
 
           it 'renders' do
-            expect(document.to_hash).to eq({
-              body: {
-                node_name:  "ARTICLE",
-                node_type:  1,
-                header:     "Header",
-                children:   [
+            expect(rendered).to eq(json({
+              root: {
+                children: [
+                  {
+                    node_name:  "ARTICLE",
+                    node_type:  1,
+                    children:   [
+                      {
+                        node_name: 'HEADER',
+                        node_type: 1,
+                        children:  [
+                          {
+                            node_name: '#text',
+                            node_type: 3,
+                            node_text: 'Article A'
+                          }
+                        ]
+                      },
+                      {
+                        node_name: 'P',
+                        node_type: 1,
+                        children:  [
+                          {
+                            node_name: '#text',
+                            node_type: 3,
+                            node_text: 'Paragraph A1'
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    node_name:  "ARTICLE",
+                    node_type:  1,
+                    children:   [
+                      {
+                        node_name: 'HEADER',
+                        node_type: 1,
+                        children:  [
+                          {
+                            node_name: '#text',
+                            node_type: 3,
+                            node_text: 'Article B'
+                          }
+                        ]
+                      },
+                      {
+                        node_name: 'P',
+                        node_type: 1,
+                        children:  [
+                          {
+                            node_name: '#text',
+                            node_type: 3,
+                            node_text: 'Paragraph B1'
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              }
+            }))
+          end
+        end
+
+        context 'given...' do
+          let(:content) { <<-CONTENT.strip_heredoc
+              Paragraph 1
+
+              # Article A
+
+              Paragraph A1
+
+              Paragraph A2
+            CONTENT
+          }
+
+          it 'renders' do
+            expect(rendered).to eq(json({
+              root: {
+                children: [
                   {
                     node_name: 'P',
                     node_type: 1,
@@ -121,58 +168,17 @@ module WIP::Checklist
                     ]
                   },
                   {
-                    node_name: 'P',
-                    node_type: 1,
-                    children:  [
+                    node_name:  "ARTICLE",
+                    node_type:  1,
+                    children:   [
                       {
-                        node_name: '#text',
-                        node_type: 3,
-                        node_text: 'Paragraph 2'
-                      }
-                    ]
-                  }
-                ]
-              }
-            })
-          end
-        end
-
-        xcontext 'given ...' do
-          let(:content)  { <<-CONTENT.strip_heredoc
-              # Header
-
-              ## Section 1
-
-              Paragraph 1A
-
-              Paragraph 1B
-
-              ## Section 2
-
-              Paragraph 2A
-            CONTENT
-          }
-
-          it 'renders' do
-            expect(document.to_hash).to eq({
-              body: {
-                node_name:  "ARTICLE",
-                node_type:  1,
-                header:     "Header",
-                children:   [
-                  {
-                    node_name: 'SECTION',
-                    node_type: 1,
-                    header:    "Section 1",
-                    children:  [
-                      {
-                        node_name: 'P',
+                        node_name: 'HEADER',
                         node_type: 1,
                         children:  [
                           {
                             node_name: '#text',
                             node_type: 3,
-                            node_text: 'Paragraph 1A'
+                            node_text: 'Article A'
                           }
                         ]
                       },
@@ -183,80 +189,7 @@ module WIP::Checklist
                           {
                             node_name: '#text',
                             node_type: 3,
-                            node_text: 'Paragraph 1B'
-                          }
-                        ]
-                      }
-                    ]
-                  },
-                  {
-                    node_name: 'SECTION',
-                    node_type: 1,
-                    header:    "Section 2",
-                    children:  [
-                      {
-                        node_name: 'P',
-                        node_type: 1,
-                        children:  [
-                          {
-                            node_name: '#text',
-                            node_type: 3,
-                            node_text: 'Paragraph 2A'
-                          }
-                        ]
-                      }
-                    ]
-                  }
-                ]
-              }
-            })
-          end
-        end
-
-        xcontext 'given ...' do
-          let(:content)  { <<-CONTENT.strip_heredoc
-              # Header
-
-              ## Section 1
-
-              Paragraph 1A
-
-              Paragraph 1B
-
-              ## Section 2
-
-              Paragraph 2A
-
-              ### Section 2I
-
-              Paragraph 2IA
-
-              ## Section 3
-
-              Paragraph 3A
-            CONTENT
-          }
-
-          it 'renders' do
-            expect(document.to_hash).to eq({
-              body: {
-                node_name:  "ARTICLE",
-                node_type:  1,
-                header:     "Header",
-                children:   [
-                  {
-                    node_name: 'SECTION',
-                    node_type: 1,
-                    header:    "Section 1",
-                    children:  [
-                      {
-                        node_name: 'P',
-                        node_type: 1,
-                        children:  [
-                          {
-                            node_name: '#text',
-                            node_type: 3,
-                            node_text: 'Paragraph 1A'
+                            node_text: 'Paragraph A1'
                           }
                         ]
                       },
@@ -267,33 +200,72 @@ module WIP::Checklist
                           {
                             node_name: '#text',
                             node_type: 3,
-                            node_text: 'Paragraph 1B'
+                            node_text: 'Paragraph A2'
                           }
                         ]
                       }
                     ]
                   },
+                ]
+              }
+            }))
+          end
+        end
+
+        context 'given ...' do
+          let(:content)  { <<-CONTENT.strip_heredoc
+              # Article A
+
+              ## Section AA
+
+              Paragraph AA.1
+
+              ## Section AB
+
+              ### Section ABA
+
+              Paragraph ABA.1
+
+              # Article B
+
+              Paragraph B.1
+            CONTENT
+          }
+
+          it 'renders' do
+            expect(rendered).to eq(json({
+              root: {
+                children: [
                   {
-                    node_name: 'SECTION',
-                    node_type: 1,
-                    header:    "Section 2",
-                    children:  [
+                    node_name:  "ARTICLE",
+                    node_type:  1,
+                    children:   [
                       {
-                        node_name: 'P',
+                        node_name: 'HEADER',
                         node_type: 1,
                         children:  [
                           {
                             node_name: '#text',
                             node_type: 3,
-                            node_text: 'Paragraph 2A'
+                            node_text: 'Article A'
                           }
                         ]
                       },
                       {
                         node_name: 'SECTION',
                         node_type: 1,
-                        header:    "Section 2I",
                         children:  [
+                          {
+                            node_name: 'HEADER',
+                            node_type: 1,
+                            children:  [
+                              {
+                                node_name: '#text',
+                                node_type: 3,
+                                node_text: 'Section AA'
+                              }
+                            ]
+                          },
                           {
                             node_name: 'P',
                             node_type: 1,
@@ -301,19 +273,74 @@ module WIP::Checklist
                               {
                                 node_name: '#text',
                                 node_type: 3,
-                                node_text: 'Paragraph 2IA'
+                                node_text: 'Paragraph AA.1'
                               }
                             ]
                           }
                         ]
-                      }
+                      },
+                      {
+                        node_name: 'SECTION',
+                        node_type: 1,
+                        children:  [
+                          {
+                            node_name: 'HEADER',
+                            node_type: 1,
+                            children:  [
+                              {
+                                node_name: '#text',
+                                node_type: 3,
+                                node_text: 'Section AB'
+                              }
+                            ]
+                          },
+                          {
+                            node_name: 'SECTION',
+                            node_type: 1,
+                            children:  [
+                              {
+                                node_name: 'HEADER',
+                                node_type: 1,
+                                children:  [
+                                  {
+                                    node_name: '#text',
+                                    node_type: 3,
+                                    node_text: 'Section ABA'
+                                  }
+                                ]
+                              },
+                              {
+                                node_name: 'P',
+                                node_type: 1,
+                                children:  [
+                                  {
+                                    node_name: '#text',
+                                    node_type: 3,
+                                    node_text: 'Paragraph ABA.1'
+                                  }
+                                ]
+                              }
+                            ]
+                          }
+                        ]
+                      },
                     ]
                   },
                   {
-                    node_name: 'SECTION',
-                    node_type: 1,
-                    header:    "Section 3",
-                    children:  [
+                    node_name:  "ARTICLE",
+                    node_type:  1,
+                    children:   [
+                      {
+                        node_name: 'HEADER',
+                        node_type: 1,
+                        children:  [
+                          {
+                            node_name: '#text',
+                            node_type: 3,
+                            node_text: 'Article B'
+                          }
+                        ]
+                      },
                       {
                         node_name: 'P',
                         node_type: 1,
@@ -321,7 +348,7 @@ module WIP::Checklist
                           {
                             node_name: '#text',
                             node_type: 3,
-                            node_text: 'Paragraph 3A'
+                            node_text: 'Paragraph B.1'
                           }
                         ]
                       }
@@ -329,7 +356,7 @@ module WIP::Checklist
                   }
                 ]
               }
-            })
+            }))
           end
         end
 
@@ -687,85 +714,6 @@ module WIP::Checklist
                                 ]
                               }
                             ]
-                          }
-                        ]
-                      }
-                    ]
-                  }
-                ]
-              }
-            }))
-          end
-        end
-
-        context 'given ...' do
-          let(:content) { <<-CONTENT.strip_heredoc
-              # Article 1
-
-              Paragraph 1
-
-              # Article 2
-
-              Paragraph 2
-            CONTENT
-          }
-
-          it 'renders (FAILS due to inner/fragment logic)' do
-            puts json(document.to_hash)
-            expect(json(document.to_hash)).to eq(json({
-              root: {
-                children: [
-                  {
-                    node_name:  "ARTICLE",
-                    node_type:  1,
-                    children:   [
-                      {
-                        node_name: 'HEADER',
-                        node_type: 1,
-                        children:  [
-                          {
-                            node_name: '#text',
-                            node_type: 3,
-                            node_text: 'Article 1'
-                          }
-                        ]
-                      },
-                      {
-                        node_name: 'P',
-                        node_type: 1,
-                        children:  [
-                          {
-                            node_name: '#text',
-                            node_type: 3,
-                            node_text: 'Paragraph 1'
-                          }
-                        ]
-                      }
-                    ]
-                  },
-                  {
-                    node_name:  "ARTICLE",
-                    node_type:  1,
-                    children:   [
-                      {
-                        node_name: 'HEADER',
-                        node_type: 1,
-                        children:  [
-                          {
-                            node_name: '#text',
-                            node_type: 3,
-                            node_text: 'Article 2'
-                          }
-                        ]
-                      },
-                      {
-                        node_name: 'P',
-                        node_type: 1,
-                        children:  [
-                          {
-                            node_name: '#text',
-                            node_type: 3,
-                            node_text: 'Paragraph 2'
                           }
                         ]
                       }

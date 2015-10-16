@@ -9,67 +9,76 @@ module WIP
           @stack = []
         end
 
-        def debug(type, node)
-          # puts "convert #{type.inspect}:\n - #{node.inspect}"
-        end
-
         def convert(node)
-          result = send(DISPATCHER[node.type], node)
-          result ? result.to_h : nil
+          send(DISPATCHER[node.type], node)
         end
 
         private
 
         def convert_root(node)
-          debug(:root, node)
-          @root = node
-          Node.find(node).new(node, inner(node.children))
+          build(node).to_h
         end
 
         # ---
 
         def convert_header(node)
-          debug(:header, node)
-          children = fragment(@root, node)
-          header   = children.shift
-          header   = Node::Header.new(header, inner(header.children))
-          Node::Article.new(node, [header.to_h] + inner(children))
+          build(node)
         end
 
         def convert_p(node)
-          debug(:p, node)
-          Node.find(node).new(node, inner(node.children))
+          build(node)
         end
 
         # ---
 
         def convert_blank(node)
-          debug(:blank, node)
           nil
         end
 
         def convert_text(node)
-          debug(:text, node)
-          Node.find(node).new(node, nil)
+          Node.find(node).new(node)
         end
 
         # ---
 
-        def inner(children)
-          children.map { |child| convert(child) }.compact
+        def build(node)
+          case node.type
+          when :root
+            context = Node::Root.new(node)
+            @stack.push(context)
+            inner(node)
+          when :header
+            level = node.options[:level]
+
+            while @stack.length > level
+              @stack.pop
+            end
+
+            parent = @stack.last
+
+            context = if level == 1
+              Node::Article.new(node)
+            else
+              Node::Section.new(node)
+            end
+            @stack.push(context)
+
+            header = Node::Header.new(node)
+            header.insert(inner(node))
+            context.insert(header)
+            parent.insert(context)
+          else
+            context = @stack.last
+            content = Node.find(node).new(node)
+            content.insert(inner(node))
+            context.insert(content)
+          end
+
+          context
         end
 
-        def fragment(parent, context)
-          type  = context.type
-          level = context.options[:level]
-          nodes = parent.children
-          index = nodes.index(context)
-          tail  = nodes[(index + 1)..-1]
-          count = tail.index { |node|
-            node.type == type && (node.options[:level] == level)
-          } || tail.length()
-
-          nodes[index..(index + count)]
+        def inner(node)
+          node.children.map { |child| convert(child) }.compact
         end
       end
     end

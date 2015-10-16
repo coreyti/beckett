@@ -15,13 +15,17 @@ module WIP
         class Base
           attr_reader :node, :children
 
-          def initialize(node, children)
+          def initialize(node)
             @node     = node
-            @children = children
+            @children = []
           end
 
           def to_h
             raise NotImplementedError
+          end
+
+          def insert(nodes)
+            @children += ([nodes].flatten)
           end
         end
       end
