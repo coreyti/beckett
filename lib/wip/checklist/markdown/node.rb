@@ -13,19 +13,36 @@ module WIP
         end
 
         class Base
-          attr_reader :node, :children
+          $position = 0
+          attr_reader :node, :children, :position
 
           def initialize(node)
             @node     = node
             @children = []
+            @position = $position
+            $position += 1
+          end
+
+          def inspect
+            "<#{node_name} position=#{position}>"
+          end
+
+          def to_s
+            inspect
           end
 
           def to_h
             raise NotImplementedError
           end
 
-          def insert(nodes)
+          def <<(nodes)
             @children += ([nodes].flatten)
+          end
+
+          private
+
+          def node_name
+            @node_name ||= node.type.upcase
           end
         end
       end

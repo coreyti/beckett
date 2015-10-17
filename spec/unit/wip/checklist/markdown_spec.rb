@@ -14,6 +14,7 @@ module WIP::Checklist
           }
 
           it 'renders' do
+            debug
             expect(rendered).to eq(json({
               root: {
                 children: []
@@ -22,7 +23,7 @@ module WIP::Checklist
           end
         end
 
-        context 'given...' do
+        context 'given ...' do
           let(:content) { <<-CONTENT.strip_heredoc
               Paragraph 1
 
@@ -31,6 +32,7 @@ module WIP::Checklist
           }
 
           it 'renders' do
+            debug
             expect(rendered).to eq(json({
               root: {
                 children: [
@@ -75,6 +77,7 @@ module WIP::Checklist
           }
 
           it 'renders' do
+            debug
             expect(rendered).to eq(json({
               root: {
                 children: [
@@ -140,7 +143,7 @@ module WIP::Checklist
           end
         end
 
-        context 'given...' do
+        context 'given ...' do
           let(:content) { <<-CONTENT.strip_heredoc
               Paragraph 1
 
@@ -153,6 +156,7 @@ module WIP::Checklist
           }
 
           it 'renders' do
+            debug
             expect(rendered).to eq(json({
               root: {
                 children: [
@@ -233,6 +237,7 @@ module WIP::Checklist
           }
 
           it 'renders' do
+            debug
             expect(rendered).to eq(json({
               root: {
                 children: [
@@ -360,60 +365,97 @@ module WIP::Checklist
           end
         end
 
-        xcontext 'given ...' do
-          let(:content)  { <<-CONTENT.strip_heredoc
-              # Header
-
-              ## Section 1
-
-              Paragraph 1A
-
-              - List Item 1A
-              - List Item 1B
-
-              Paragraph 1B
-
-              ## Section 2
-
-              Paragraph 2A
-
-              ### Section 2I
-
-              Paragraph 2IA
-
-              - List Item 2IA
-                1. List Item 2IA1
-                2. List Item 2IA2
-              - List Item 2IB
-                - List Item 2IB1
-                - List Item 2IB2
-
-              ## Section 3
-
-              Paragraph 3A
+        context 'given ...' do
+          let(:content) { <<-CONTENT.strip_heredoc
+              - Item 1
+              - Item 2
             CONTENT
           }
 
           it 'renders' do
-            expect(document.to_json).to eq({
-              body: {
-                node_name:  "ARTICLE",
-                node_type:  1,
-                header:     "Header",
+            debug
+            expect(rendered).to eq(json({
+              root: {
                 children:   [
                   {
-                    node_name: 'SECTION',
+                    node_name: 'UL',
                     node_type: 1,
-                    header:    "Section 1",
                     children:  [
                       {
-                        node_name: 'P',
+                        node_name: 'LI',
+                        node_type: 1,
+                        children:  [
+                          {
+                            node_name: 'P',
+                            node_type: 1,
+                            children: [
+                              {
+                                node_name: '#text',
+                                node_type: 3,
+                                node_text: 'Item 1'
+                              }
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        node_name: 'LI',
+                        node_type: 1,
+                        children:  [
+                          {
+                            node_name: 'P',
+                            node_type: 1,
+                            children: [
+                              {
+                                node_name: '#text',
+                                node_type: 3,
+                                node_text: 'Item 2'
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              }
+            }))
+          end
+        end
+
+        context 'given ...' do
+          let(:content) { <<-CONTENT.strip_heredoc
+              # Article A
+
+              - Item A.1
+                - Item A.1.1
+                - Item A.1.2
+              - Item A.2
+                1. Item A.2.1
+                2. Item A.2.2
+              - Item A.3
+                - Item A.3.1
+                - Item A.3.2
+            CONTENT
+          }
+
+          it 'renders' do
+            debug
+            expect(rendered).to eq(json({
+              root: {
+                children:   [
+                  {
+                    node_name:  "ARTICLE",
+                    node_type:  1,
+                    children:   [
+                      {
+                        node_name: 'HEADER',
                         node_type: 1,
                         children:  [
                           {
                             node_name: '#text',
                             node_type: 3,
-                            node_text: 'Paragraph 1A'
+                            node_text: 'Article A'
                           }
                         ]
                       },
@@ -426,9 +468,55 @@ module WIP::Checklist
                             node_type: 1,
                             children:  [
                               {
-                                node_name: '#text',
-                                node_type: 3,
-                                node_text: 'List Item 1A'
+                                node_name: 'P',
+                                node_type: 1,
+                                children:  [
+                                  {
+                                    node_name: '#text',
+                                    node_type: 3,
+                                    node_text: 'Item A.1'
+                                  }
+                                ]
+                              },
+                              {
+                                node_name: 'UL',
+                                node_type: 1,
+                                children:  [
+                                  {
+                                    node_name: 'LI',
+                                    node_type: 1,
+                                    children:  [
+                                      {
+                                        node_name: 'P',
+                                        node_type: 1,
+                                        children:  [
+                                          {
+                                            node_name: '#text',
+                                            node_type: 3,
+                                            node_text: 'Item A.1.1'
+                                          }
+                                        ]
+                                      }
+                                    ]
+                                  },
+                                  {
+                                    node_name: 'LI',
+                                    node_type: 1,
+                                    children:  [
+                                      {
+                                        node_name: 'P',
+                                        node_type: 1,
+                                        children:  [
+                                          {
+                                            node_name: '#text',
+                                            node_type: 3,
+                                            node_text: 'Item A.1.2'
+                                          }
+                                        ]
+                                      }
+                                    ]
+                                  }
+                                ]
                               }
                             ]
                           },
@@ -437,134 +525,49 @@ module WIP::Checklist
                             node_type: 1,
                             children:  [
                               {
-                                node_name: '#text',
-                                node_type: 3,
-                                node_text: 'List Item 1B'
-                              }
-                            ]
-                          }
-                        ]
-                      },
-                      {
-                        node_name: 'P',
-                        node_type: 1,
-                        children:  [
-                          {
-                            node_name: '#text',
-                            node_type: 3,
-                            node_text: 'Paragraph 1B'
-                          }
-                        ]
-                      }
-                    ]
-                  },
-                  {
-                    node_name: 'SECTION',
-                    node_type: 1,
-                    header:    "Section 2",
-                    children:  [
-                      {
-                        node_name: 'P',
-                        node_type: 1,
-                        children:  [
-                          {
-                            node_name: '#text',
-                            node_type: 3,
-                            node_text: 'Paragraph 2A'
-                          }
-                        ]
-                      },
-                      {
-                        node_name: 'SECTION',
-                        node_type: 1,
-                        header:    "Section 2I",
-                        children:  [
-                          {
-                            node_name: 'P',
-                            node_type: 1,
-                            children:  [
-                              {
-                                node_name: '#text',
-                                node_type: 3,
-                                node_text: 'Paragraph 2IA'
-                              }
-                            ]
-                          },
-                          {
-                            node_name: 'UL',
-                            node_type: 1,
-                            children:  [
-                              {
-                                node_name: 'LI',
+                                node_name: 'P',
                                 node_type: 1,
                                 children:  [
                                   {
                                     node_name: '#text',
-                                    node_type: 1,
-                                    node_text: 'List Item 2IA'
-                                  },
-                                  {
-                                    node_name: 'OL',
-                                    node_type: 1,
-                                    children:  [
-                                      {
-                                        node_name: 'LI',
-                                        node_type: 1,
-                                        children:  [
-                                          {
-                                            node_name: '#text',
-                                            node_type: 3,
-                                            node_text: 'List Item 2IA1'
-                                          }
-                                        ]
-                                      },
-                                      {
-                                        node_name: 'LI',
-                                        node_type: 1,
-                                        children:  [
-                                          {
-                                            node_name: '#text',
-                                            node_type: 3,
-                                            node_text: 'List Item 2IA2'
-                                          }
-                                        ]
-                                      }
-                                    ]
+                                    node_type: 3,
+                                    node_text: 'Item A.2'
                                   }
                                 ]
                               },
                               {
-                                node_name: 'LI',
+                                node_name: 'OL',
                                 node_type: 1,
                                 children:  [
                                   {
-                                    node_name: '#text',
-                                    node_type: 1,
-                                    node_text: 'List Item 2IB'
-                                  },
-                                  {
-                                    node_name: 'UL',
+                                    node_name: 'LI',
                                     node_type: 1,
                                     children:  [
                                       {
-                                        node_name: 'LI',
+                                        node_name: 'P',
                                         node_type: 1,
                                         children:  [
                                           {
                                             node_name: '#text',
                                             node_type: 3,
-                                            node_text: 'List Item 2IB1'
+                                            node_text: 'Item A.2.1'
                                           }
                                         ]
-                                      },
+                                      }
+                                    ]
+                                  },
+                                  {
+                                    node_name: 'LI',
+                                    node_type: 1,
+                                    children:  [
                                       {
-                                        node_name: 'LI',
+                                        node_name: 'P',
                                         node_type: 1,
                                         children:  [
                                           {
                                             node_name: '#text',
                                             node_type: 3,
-                                            node_text: 'List Item 2IB2'
+                                            node_text: 'Item A.2.2'
                                           }
                                         ]
                                       }
@@ -573,24 +576,63 @@ module WIP::Checklist
                                 ]
                               }
                             ]
-                          }
-                        ]
-                      }
-                    ]
-                  },
-                  {
-                    node_name: 'SECTION',
-                    node_type: 1,
-                    header:    "Section 3",
-                    children:  [
-                      {
-                        node_name: 'P',
-                        node_type: 1,
-                        children:  [
+                          },
                           {
-                            node_name: '#text',
-                            node_type: 3,
-                            node_text: 'Paragraph 3A'
+                            node_name: 'LI',
+                            node_type: 1,
+                            children:  [
+                              {
+                                node_name: 'P',
+                                node_type: 1,
+                                children:  [
+                                  {
+                                    node_name: '#text',
+                                    node_type: 3,
+                                    node_text: 'Item A.3'
+                                  }
+                                ]
+                              },
+                              {
+                                node_name: 'UL',
+                                node_type: 1,
+                                children:  [
+                                  {
+                                    node_name: 'LI',
+                                    node_type: 1,
+                                    children:  [
+                                      {
+                                        node_name: 'P',
+                                        node_type: 1,
+                                        children:  [
+                                          {
+                                            node_name: '#text',
+                                            node_type: 3,
+                                            node_text: 'Item A.3.1'
+                                          }
+                                        ]
+                                      }
+                                    ]
+                                  },
+                                  {
+                                    node_name: 'LI',
+                                    node_type: 1,
+                                    children:  [
+                                      {
+                                        node_name: 'P',
+                                        node_type: 1,
+                                        children:  [
+                                          {
+                                            node_name: '#text',
+                                            node_type: 3,
+                                            node_text: 'Item A.3.2'
+                                          }
+                                        ]
+                                      }
+                                    ]
+                                  }
+                                ]
+                              }
+                            ]
                           }
                         ]
                       }
@@ -598,55 +640,154 @@ module WIP::Checklist
                   }
                 ]
               }
-            }.to_json)
+            }))
           end
         end
 
-        xcontext 'given ...' do
-          let(:content) { <<-CONTENT.strip_heredoc
-              # Header
+        context 'given ...' do
+          let(:content)  { <<-CONTENT.strip_heredoc
+              - Item 1
 
-              - List Item A1
-                - List Item A1A
-                - List Item A1B
-              - List Item A2
-                1. List Item A2A
-                2. List Item A2B
-              - List Item A3
-                - List Item A2A
-                - List Item A2B
+                  Term A
+                  : Definition A
+
+                    - Item A.1
+                    - Item A.2
+
+                  Term B
+                  : Definition B
+
+                  - Item 1.1
+                  - Item 1.2
+              - Item 2
             CONTENT
           }
 
           it 'renders' do
-            expect(json(document.to_hash)).to eq(json({
-              body: {
-                node_name:  "ARTICLE",
-                node_type:  1,
-                children:   [
-                  {
-                    node_name: 'HEADER',
-                    node_type: 1,
-                    children:  [
-                      {
-                        node_name: '#text',
-                        node_type: 3,
-                        node_text: 'Header'
-                      }
-                    ]
-                  },
+            debug
+            expect(rendered).to eq(json({
+              root: {
+                children: [
                   {
                     node_name: 'UL',
                     node_type: 1,
-                    children:  [
+                    children: [
                       {
                         node_name: 'LI',
                         node_type: 1,
-                        children:  [
+                        children: [
                           {
-                            node_name: '#text',
-                            node_type: 3,
-                            node_text: 'List Item A1'
+                            node_name: 'P',
+                            node_type: 1,
+                            children: [
+                              {
+                                node_name: '#text',
+                                node_type: 3,
+                                node_text: 'Item 1'
+                              }
+                            ]
+                          },
+                          {
+                            node_name: 'DL',
+                            node_type: 1,
+                            children: [
+                              {
+                                node_name: 'DT',
+                                node_type: 1,
+                                children: [
+                                  {
+                                    node_name: '#text',
+                                    node_type: 3,
+                                    node_text: 'Term A'
+                                  }
+                                ]
+                              },
+                              {
+                                node_name: 'DD',
+                                node_type: 1,
+                                children: [
+                                  {
+                                    node_name: 'P',
+                                    node_type: 1,
+                                    children: [
+                                      {
+                                        node_name: '#text',
+                                        node_type: 3,
+                                        node_text: 'Definition A'
+                                      }
+                                    ]
+                                  },
+                                  {
+                                    node_name: 'UL',
+                                    node_type: 1,
+                                    children: [
+                                      {
+                                        node_name: 'LI',
+                                        node_type: 1,
+                                        children: [
+                                          {
+                                            node_name: 'P',
+                                            node_type: 1,
+                                            children: [
+                                              {
+                                                node_name: '#text',
+                                                node_type: 3,
+                                                node_text: 'Item A.1'
+                                              }
+                                            ]
+                                          }
+                                        ]
+                                      },
+                                      {
+                                        node_name: 'LI',
+                                        node_type: 1,
+                                        children: [
+                                          {
+                                            node_name: 'P',
+                                            node_type: 1,
+                                            children: [
+                                              {
+                                                node_name: '#text',
+                                                node_type: 3,
+                                                node_text: 'Item A.2'
+                                              }
+                                            ]
+                                          }
+                                        ]
+                                      }
+                                    ]
+                                  }
+                                ]
+                              },
+                              {
+                                node_name: 'DT',
+                                node_type: 1,
+                                children: [
+                                  {
+                                    node_name: '#text',
+                                    node_type: 3,
+                                    node_text: 'Term B'
+                                  }
+                                ]
+                              },
+                              {
+                                node_name: 'DD',
+                                node_type: 1,
+                                children: [
+                                  {
+                                    node_name: 'P',
+                                    node_type: 1,
+                                    children: [
+                                      {
+                                        node_name: '#text',
+                                        node_type: 3,
+                                        node_text: 'Definition B'
+                                      }
+                                    ]
+                                  }
+                                ]
+                              }
+                            ]
                           },
                           {
                             node_name: 'UL',
@@ -657,9 +798,15 @@ module WIP::Checklist
                                 node_type: 1,
                                 children:  [
                                   {
-                                    node_name: '#text',
-                                    node_type: 3,
-                                    node_text: 'List Item A1A'
+                                    node_name: 'P',
+                                    node_type: 1,
+                                    children:  [
+                                      {
+                                        node_name: '#text',
+                                        node_type: 3,
+                                        node_text: 'Item 1.1'
+                                      }
+                                    ]
                                   }
                                 ]
                               },
@@ -668,9 +815,15 @@ module WIP::Checklist
                                 node_type: 1,
                                 children:  [
                                   {
-                                    node_name: '#text',
-                                    node_type: 3,
-                                    node_text: 'List Item A1B'
+                                    node_name: 'P',
+                                    node_type: 1,
+                                    children:  [
+                                      {
+                                        node_name: '#text',
+                                        node_type: 3,
+                                        node_text: 'Item 1.2'
+                                      }
+                                    ]
                                   }
                                 ]
                               }
@@ -681,37 +834,15 @@ module WIP::Checklist
                       {
                         node_name: 'LI',
                         node_type: 1,
-                        children:  [
+                        children: [
                           {
-                            node_name: '#text',
-                            node_type: 3,
-                            node_text: 'List Item A2'
-                          },
-                          {
-                            node_name: 'UL',
+                            node_name: 'P',
                             node_type: 1,
-                            children:  [
+                            children: [
                               {
-                                node_name: 'LI',
-                                node_type: 1,
-                                children:  [
-                                  {
-                                    node_name: '#text',
-                                    node_type: 3,
-                                    node_text: 'List Item A2A'
-                                  }
-                                ]
-                              },
-                              {
-                                node_name: 'LI',
-                                node_type: 1,
-                                children:  [
-                                  {
-                                    node_name: '#text',
-                                    node_type: 3,
-                                    node_text: 'List Item A2B'
-                                  }
-                                ]
+                                node_name: '#text',
+                                node_type: 3,
+                                node_text: 'Item 2'
                               }
                             ]
                           }

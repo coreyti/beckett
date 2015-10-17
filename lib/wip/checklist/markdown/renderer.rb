@@ -2,7 +2,10 @@ module WIP
   module Checklist
     module Markdown
       class Renderer < Kramdown::Converter::Base
-        DISPATCHER = Hash.new { |h, k| h[k] = "convert_#{k}" }
+        DISPATCHER = Hash.new { |h, k|
+          method = :"convert_#{k}"
+          h[k] = Renderer.method_defined?(method) ? method : :convert_node
+        }
 
         def initialize(root, options = {})
           super
@@ -13,19 +16,13 @@ module WIP
           send(DISPATCHER[node.type], node)
         end
 
-        private
+        protected
 
         def convert_root(node)
           build(node).to_h
         end
 
-        # ---
-
-        def convert_header(node)
-          build(node)
-        end
-
-        def convert_p(node)
+        def convert_node(node)
           build(node)
         end
 
@@ -42,43 +39,72 @@ module WIP
         # ---
 
         def build(node)
-          case node.type
-          when :root
-            context = Node::Root.new(node)
-            @stack.push(context)
+          Node.find(node).new(node).tap do |result|
+            push(result)
             inner(node)
-          when :header
-            level = node.options[:level]
+            pop
+          end
+        end
 
-            while @stack.length > level
-              @stack.pop
-            end
+        def build_section(node)
+          level = node.options[:level]
 
-            parent = @stack.last
-
-            context = if level == 1
-              Node::Article.new(node)
-            else
-              Node::Section.new(node)
-            end
-            @stack.push(context)
-
-            header = Node::Header.new(node)
-            header.insert(inner(node))
-            context.insert(header)
-            parent.insert(context)
-          else
-            context = @stack.last
-            content = Node.find(node).new(node)
-            content.insert(inner(node))
-            context.insert(content)
+          while @stack.length > level
+            pop
           end
 
-          context
+          if level == 1
+            Node::Article.new(node)
+          else
+            Node::Section.new(node)
+          end
+        end
+
+        def context
+          @stack.last
         end
 
         def inner(node)
-          node.children.map { |child| convert(child) }.compact
+          node.children.each do |child|
+            if child.type == :header
+              build_section(child).tap do |result|
+                context << result
+                push(result)
+              end
+            end
+
+            convert(child).tap do |result|
+              context << result unless result.nil?
+            end
+          end
+        end
+
+        def push(context)
+          if debug?
+            @indent ||= 0
+            puts "#{' ' * @indent}#{context}"
+            @indent += 2
+          end
+
+          @stack.push(context)
+        end
+
+        def pop
+          context = @stack.pop
+
+          if debug?
+            @indent -= 2
+            puts "#{' ' * @indent}#{context}".sub(/^(\s*)<([A-Z]+).*/, '\1</\2>')
+          end
+        end
+
+        # ---
+
+        def debug?
+          if @debug == nil
+            @debug = (ENV['DEBUG'] == 'true')
+          end
+          @debug
         end
       end
     end
