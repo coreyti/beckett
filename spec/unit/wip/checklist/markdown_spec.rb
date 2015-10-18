@@ -912,6 +912,50 @@ module WIP::Checklist
             }))
           end
         end
+
+        context 'given ...' do
+          let(:content) { <<-CONTENT.strip_heredoc
+              Paragraph 1 *with* emphasis
+            CONTENT
+          }
+
+          it 'renders' do
+            debug
+            expect(rendered).to eq(json({
+              root: {
+                children: [
+                  {
+                    node_name: 'P',
+                    node_type: 1,
+                    children:  [
+                      {
+                        node_name: '#text',
+                        node_type: 3,
+                        node_text: 'Paragraph 1'
+                      },
+                      {
+                        node_name: 'EM',
+                        node_type: 1,
+                        children:  [
+                          {
+                            node_name: '#text',
+                            node_type: 3,
+                            node_text: 'with'
+                          }
+                        ]
+                      },
+                      {
+                        node_name: '#text',
+                        node_type: 3,
+                        node_text: 'emphasis'
+                      }
+                    ]
+                  }
+                ]
+              }
+            }))
+          end
+        end
       end
     end
   end
