@@ -82,7 +82,7 @@ module WIP::Checklist
               root: {
                 children: [
                   {
-                    node_name:  "ARTICLE",
+                    node_name:  'ARTICLE',
                     node_type:  1,
                     children:   [
                       {
@@ -110,7 +110,7 @@ module WIP::Checklist
                     ]
                   },
                   {
-                    node_name:  "ARTICLE",
+                    node_name:  'ARTICLE',
                     node_type:  1,
                     children:   [
                       {
@@ -172,7 +172,7 @@ module WIP::Checklist
                     ]
                   },
                   {
-                    node_name:  "ARTICLE",
+                    node_name:  'ARTICLE',
                     node_type:  1,
                     children:   [
                       {
@@ -242,7 +242,7 @@ module WIP::Checklist
               root: {
                 children: [
                   {
-                    node_name:  "ARTICLE",
+                    node_name:  'ARTICLE',
                     node_type:  1,
                     children:   [
                       {
@@ -332,7 +332,7 @@ module WIP::Checklist
                     ]
                   },
                   {
-                    node_name:  "ARTICLE",
+                    node_name:  'ARTICLE',
                     node_type:  1,
                     children:   [
                       {
@@ -445,7 +445,7 @@ module WIP::Checklist
               root: {
                 children:   [
                   {
-                    node_name:  "ARTICLE",
+                    node_name:  'ARTICLE',
                     node_type:  1,
                     children:   [
                       {
@@ -847,6 +847,63 @@ module WIP::Checklist
                             ]
                           }
                         ]
+                      }
+                    ]
+                  }
+                ]
+              }
+            }))
+          end
+        end
+
+        context 'given ...' do
+          let(:content) { <<-CONTENT.strip_heredoc
+              Paragraph 1
+
+              ```
+              MESSAGE=LaLa
+              echo $MESSAGE
+              ```
+
+              Paragraph 2
+            CONTENT
+          }
+
+          it 'renders' do
+            debug
+            expect(rendered).to eq(json({
+              root: {
+                children: [
+                  {
+                    node_name: 'P',
+                    node_type: 1,
+                    children:  [
+                      {
+                        node_name: '#text',
+                        node_type: 3,
+                        node_text: 'Paragraph 1'
+                      }
+                    ]
+                  },
+                  {
+                    node_name: 'P',
+                    node_type: 1,
+                    children:  [
+                      {
+                        node_name: 'CODESPAN',
+                        node_type: 1,
+                        node_text: "MESSAGE=LaLa\necho $MESSAGE"
+                      }
+                    ]
+                  },
+                  {
+                    node_name: 'P',
+                    node_type: 1,
+                    children:  [
+                      {
+                        node_name: '#text',
+                        node_type: 3,
+                        node_text: 'Paragraph 2'
                       }
                     ]
                   }

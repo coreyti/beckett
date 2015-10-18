@@ -4,11 +4,14 @@ require 'kramdown'
 require 'wip/checklist/markdown/renderer'
 require 'wip/checklist/markdown/node'
 require 'wip/checklist/markdown/node/root'
+
 require 'wip/checklist/markdown/node/element'
 require 'wip/checklist/markdown/node/article'
 require 'wip/checklist/markdown/node/section'
 require 'wip/checklist/markdown/node/header'
+
 require 'wip/checklist/markdown/node/text'
+require 'wip/checklist/markdown/node/codespan'
 
 module WIP
   module Checklist

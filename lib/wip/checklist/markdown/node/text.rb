@@ -17,7 +17,7 @@ module WIP
         end
 
         def node_text
-          node.value.rstrip
+          node.value.strip
         end
 
         def node_type
