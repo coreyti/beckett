@@ -1,10 +1,6 @@
 require 'json'
 
 module Support
-  def io
-    @io ||= HighLine.new
-  end
-
   def debug
     puts rendered if debug?
   end
