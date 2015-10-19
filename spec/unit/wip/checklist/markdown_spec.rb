@@ -956,6 +956,97 @@ module WIP::Checklist
             }))
           end
         end
+
+        context 'given ...' do
+          let(:content) { <<-CONTENT.strip_heredoc
+              > from: <http://example.com>,
+              >
+              > multi-
+              > line
+              >
+              > block
+              > quote with [a link](http://example.com).
+            CONTENT
+          }
+
+          it 'renders' do
+            debug
+            expect(rendered).to eq(json({
+              root: {
+                children: [
+                  {
+                    node_name: 'BLOCKQUOTE',
+                    node_type: 1,
+                    children:  [
+                      {
+                        node_name: 'P',
+                        node_type: 1,
+                        children:  [
+                          {
+                            node_name: '#text',
+                            node_type: 3,
+                            node_text: "multi-\nline"
+                          }
+                        ]
+                      },
+                      {
+                        node_name: 'P',
+                        node_type: 1,
+                        children:  [
+                          {
+                            node_name: '#text',
+                            node_type: 3,
+                            node_text: "block\nquote"
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              }
+            }))
+          end
+        end
+
+        context 'given ...' do
+          let(:content) { <<-CONTENT.strip_heredoc
+            |------------+------------|
+            | Header A   | Header B   |
+            |------------|------------|
+            | Content A1 | Content B1 |
+            | Content A2 | Content B2 |
+            |------------+------------|
+            CONTENT
+          }
+
+          it 'renders' do
+            debug
+            expect(rendered).to eq(json({
+              root: {
+                children: []
+              }
+            }))
+          end
+        end
+
+        context 'given ...' do
+          let(:content) { <<-CONTENT.strip_heredoc
+              *Text A1*
+              _Text A2_
+              **Text B1**
+              __Text B2__
+            CONTENT
+          }
+
+          it 'renders' do
+            debug
+            expect(rendered).to eq(json({
+              root: {
+                children: []
+              }
+            }))
+          end
+        end
       end
     end
   end
