@@ -857,7 +857,8 @@ module Beckett
 
       context 'given ...' do
         let(:content) { <<-CONTENT.strip_heredoc
-            Paragraph 1
+            Paragraph 1, Line 1
+            Line 2, with `code`
 
             ```
             MESSAGE=LaLa
@@ -880,20 +881,28 @@ module Beckett
                     {
                       node_name: '#text',
                       node_type: 3,
-                      node_text: 'Paragraph 1'
+                      node_text: 'Paragraph 1, Line 1'
+                    },
+                    {
+                      node_name: 'BR',
+                      node_type: 1
+                    },
+                    {
+                      node_name: '#text',
+                      node_type: 3,
+                      node_text: "\nLine 2, with "
+                    },
+                    {
+                      node_name: 'CODESPAN',
+                      node_type: 1,
+                      node_text: 'code'
                     }
                   ]
                 },
                 {
-                  node_name: 'P',
+                  node_name: 'CODEBLOCK',
                   node_type: 1,
-                  children:  [
-                    {
-                      node_name: 'CODESPAN',
-                      node_type: 1,
-                      node_text: "MESSAGE=LaLa\necho $MESSAGE"
-                    }
-                  ]
+                  node_text: "MESSAGE=LaLa\necho $MESSAGE"
                 },
                 {
                   node_name: 'P',
@@ -930,7 +939,7 @@ module Beckett
                     {
                       node_name: '#text',
                       node_type: 3,
-                      node_text: 'Paragraph 1'
+                      node_text: 'Paragraph 1 '
                     },
                     {
                       node_name: 'EM',
@@ -946,7 +955,7 @@ module Beckett
                     {
                       node_name: '#text',
                       node_type: 3,
-                      node_text: 'emphasis'
+                      node_text: ' emphasis'
                     }
                   ]
                 }
@@ -984,7 +993,7 @@ module Beckett
                         {
                           node_name: '#text',
                           node_type: 3,
-                          node_text: "from:"
+                          node_text: 'from: '
                         },
                         {
                           node_name: 'A',
@@ -996,14 +1005,14 @@ module Beckett
                             {
                               node_name: '#text',
                               node_type: 3,
-                              node_text: "http://example.com"
+                              node_text: 'http://example.com'
                             },
                           ]
                         },
                         {
                           node_name: '#text',
                           node_type: 3,
-                          node_text: ","
+                          node_text: ','
                         }
                       ]
                     },
@@ -1014,7 +1023,16 @@ module Beckett
                         {
                           node_name: '#text',
                           node_type: 3,
-                          node_text: "multi-\nline"
+                          node_text: 'multi-'
+                        },
+                        {
+                          node_name: 'BR',
+                          node_type: 1
+                        },
+                        {
+                          node_name: '#text',
+                          node_type: 3,
+                          node_text: "\nline"
                         }
                       ]
                     },
@@ -1025,7 +1043,16 @@ module Beckett
                         {
                           node_name: '#text',
                           node_type: 3,
-                          node_text: "block\nquote with"
+                          node_text: 'block'
+                        },
+                        {
+                          node_name: 'BR',
+                          node_type: 1
+                        },
+                        {
+                          node_name: '#text',
+                          node_type: 3,
+                          node_text: "\nquote with "
                         },
                         {
                           node_name: 'A',
@@ -1037,14 +1064,14 @@ module Beckett
                             {
                               node_name: '#text',
                               node_type: 3,
-                              node_text: "a link"
+                              node_text: 'a link'
                             },
                           ]
                         },
                         {
                           node_name: '#text',
                           node_type: 3,
-                          node_text: "."
+                          node_text: '.'
                         }
                       ]
                     }
@@ -1091,7 +1118,7 @@ module Beckett
                                 {
                                   node_name: '#text',
                                   node_type: 3,
-                                  node_text: "Header A"
+                                  node_text: 'Header A'
                                 }
                               ]
                             },
@@ -1102,7 +1129,7 @@ module Beckett
                                 {
                                   node_name: '#text',
                                   node_type: 3,
-                                  node_text: "Header B"
+                                  node_text: 'Header B'
                                 }
                               ]
                             }
@@ -1125,7 +1152,7 @@ module Beckett
                                 {
                                   node_name: '#text',
                                   node_type: 3,
-                                  node_text: "Content A1"
+                                  node_text: 'Content A1'
                                 }
                               ]
                             },
@@ -1136,7 +1163,7 @@ module Beckett
                                 {
                                   node_name: '#text',
                                   node_type: 3,
-                                  node_text: "Content B1"
+                                  node_text: 'Content B1'
                                 }
                               ]
                             }
@@ -1153,7 +1180,7 @@ module Beckett
                                 {
                                   node_name: '#text',
                                   node_type: 3,
-                                  node_text: "Content A2"
+                                  node_text: 'Content A2'
                                 }
                               ]
                             },
@@ -1164,7 +1191,7 @@ module Beckett
                                 {
                                   node_name: '#text',
                                   node_type: 3,
-                                  node_text: "Content B2"
+                                  node_text: 'Content B2'
                                 }
                               ]
                             }
@@ -1205,14 +1232,13 @@ module Beckett
                         {
                           node_name: '#text',
                           node_type: 3,
-                          node_text: "Text A1"
+                          node_text: 'Text A1'
                         }
                       ]
                     },
                     {
-                      node_name: '#text',
-                      node_type: 3,
-                      node_text: ""
+                      node_name: 'BR',
+                      node_type: 1,
                     },
                     {
                       node_name: 'EM',
@@ -1221,14 +1247,13 @@ module Beckett
                         {
                           node_name: '#text',
                           node_type: 3,
-                          node_text: "Text A2"
+                          node_text: 'Text A2'
                         }
                       ]
                     },
                     {
-                      node_name: '#text',
-                      node_type: 3,
-                      node_text: ""
+                      node_name: 'BR',
+                      node_type: 1,
                     },
                     {
                       node_name: 'STRONG',
@@ -1237,14 +1262,13 @@ module Beckett
                         {
                           node_name: '#text',
                           node_type: 3,
-                          node_text: "Text B1"
+                          node_text: 'Text B1'
                         }
                       ]
                     },
                     {
-                      node_name: '#text',
-                      node_type: 3,
-                      node_text: ""
+                      node_name: 'BR',
+                      node_type: 1,
                     },
                     {
                       node_name: 'STRONG',
@@ -1253,7 +1277,7 @@ module Beckett
                         {
                           node_name: '#text',
                           node_type: 3,
-                          node_text: "Text B2"
+                          node_text: 'Text B2'
                         }
                       ]
                     }

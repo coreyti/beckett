@@ -1,5 +1,5 @@
 module Beckett
-  class Node::Text < Node::Base
+  class Node::Codeblock < Node::Element
     def to_h
       {}.tap do |element|
         element[:node_name] = node_name
@@ -8,23 +8,10 @@ module Beckett
       end
     end
 
-    def nil?
-      # improves list rendering.
-      node_text.strip.empty?
-    end
-
     private
 
-    def node_name
-      '#text'
-    end
-
     def node_text
-      node.value
-    end
-
-    def node_type
-      3
+      node.value.strip
     end
   end
 end

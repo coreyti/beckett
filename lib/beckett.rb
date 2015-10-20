@@ -9,9 +9,12 @@ require 'beckett/node/element'
 require 'beckett/node/article'
 require 'beckett/node/section'
 require 'beckett/node/header'
+require 'beckett/node/codeblock'
 
 require 'beckett/node/text'
 require 'beckett/node/codespan'
+require 'beckett/node/br'
+
 
 module Beckett
   class Document
@@ -20,7 +23,7 @@ module Beckett
     end
 
     def to_hash
-      document = Kramdown::Document.new(@content)
+      document = Kramdown::Document.new(@content, input: 'GFM')
       renderer = Renderer.send(:new, document.root)
       renderer.convert(document.root)
     end
