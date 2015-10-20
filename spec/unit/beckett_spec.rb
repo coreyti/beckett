@@ -984,6 +984,36 @@ module Beckett
                         {
                           node_name: '#text',
                           node_type: 3,
+                          node_text: "from:"
+                        },
+                        {
+                          node_name: 'A',
+                          node_type: 1,
+                          attributes: {
+                            href: 'http://example.com'
+                          },
+                          children:  [
+                            {
+                              node_name: '#text',
+                              node_type: 3,
+                              node_text: "http://example.com"
+                            },
+                          ]
+                        },
+                        {
+                          node_name: '#text',
+                          node_type: 3,
+                          node_text: ","
+                        }
+                      ]
+                    },
+                    {
+                      node_name: 'P',
+                      node_type: 1,
+                      children:  [
+                        {
+                          node_name: '#text',
+                          node_type: 3,
                           node_text: "multi-\nline"
                         }
                       ]
@@ -995,7 +1025,26 @@ module Beckett
                         {
                           node_name: '#text',
                           node_type: 3,
-                          node_text: "block\nquote"
+                          node_text: "block\nquote with"
+                        },
+                        {
+                          node_name: 'A',
+                          node_type: 1,
+                          attributes: {
+                            href: 'http://example.com'
+                          },
+                          children:  [
+                            {
+                              node_name: '#text',
+                              node_type: 3,
+                              node_text: "a link"
+                            },
+                          ]
+                        },
+                        {
+                          node_name: '#text',
+                          node_type: 3,
+                          node_text: "."
                         }
                       ]
                     }
@@ -1022,7 +1071,110 @@ module Beckett
           debug
           expect(rendered).to eq(json({
             root: {
-              children: []
+              children: [
+                {
+                  node_name: 'TABLE',
+                  node_type: 1,
+                  children:  [
+                    {
+                      node_name: 'THEAD',
+                      node_type: 1,
+                      children:  [
+                        {
+                          node_name: 'TR',
+                          node_type: 1,
+                          children:  [
+                            {
+                              node_name: 'TD',
+                              node_type: 1,
+                              children:  [
+                                {
+                                  node_name: '#text',
+                                  node_type: 3,
+                                  node_text: "Header A"
+                                }
+                              ]
+                            },
+                            {
+                              node_name: 'TD',
+                              node_type: 1,
+                              children:  [
+                                {
+                                  node_name: '#text',
+                                  node_type: 3,
+                                  node_text: "Header B"
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      node_name: 'TBODY',
+                      node_type: 1,
+                      children:  [
+                        {
+                          node_name: 'TR',
+                          node_type: 1,
+                          children:  [
+                            {
+                              node_name: 'TD',
+                              node_type: 1,
+                              children:  [
+                                {
+                                  node_name: '#text',
+                                  node_type: 3,
+                                  node_text: "Content A1"
+                                }
+                              ]
+                            },
+                            {
+                              node_name: 'TD',
+                              node_type: 1,
+                              children:  [
+                                {
+                                  node_name: '#text',
+                                  node_type: 3,
+                                  node_text: "Content B1"
+                                }
+                              ]
+                            }
+                          ]
+                        },
+                        {
+                          node_name: 'TR',
+                          node_type: 1,
+                          children:  [
+                            {
+                              node_name: 'TD',
+                              node_type: 1,
+                              children:  [
+                                {
+                                  node_name: '#text',
+                                  node_type: 3,
+                                  node_text: "Content A2"
+                                }
+                              ]
+                            },
+                            {
+                              node_name: 'TD',
+                              node_type: 1,
+                              children:  [
+                                {
+                                  node_name: '#text',
+                                  node_type: 3,
+                                  node_text: "Content B2"
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
             }
           }))
         end
@@ -1041,7 +1193,73 @@ module Beckett
           debug
           expect(rendered).to eq(json({
             root: {
-              children: []
+              children: [
+                {
+                  node_name: 'P',
+                  node_type: 1,
+                  children:  [
+                    {
+                      node_name: 'EM',
+                      node_type: 1,
+                      children:  [
+                        {
+                          node_name: '#text',
+                          node_type: 3,
+                          node_text: "Text A1"
+                        }
+                      ]
+                    },
+                    {
+                      node_name: '#text',
+                      node_type: 3,
+                      node_text: ""
+                    },
+                    {
+                      node_name: 'EM',
+                      node_type: 1,
+                      children:  [
+                        {
+                          node_name: '#text',
+                          node_type: 3,
+                          node_text: "Text A2"
+                        }
+                      ]
+                    },
+                    {
+                      node_name: '#text',
+                      node_type: 3,
+                      node_text: ""
+                    },
+                    {
+                      node_name: 'STRONG',
+                      node_type: 1,
+                      children:  [
+                        {
+                          node_name: '#text',
+                          node_type: 3,
+                          node_text: "Text B1"
+                        }
+                      ]
+                    },
+                    {
+                      node_name: '#text',
+                      node_type: 3,
+                      node_text: ""
+                    },
+                    {
+                      node_name: 'STRONG',
+                      node_type: 1,
+                      children:  [
+                        {
+                          node_name: '#text',
+                          node_type: 3,
+                          node_text: "Text B2"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
             }
           }))
         end
