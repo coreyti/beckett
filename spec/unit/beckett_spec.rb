@@ -2,23 +2,18 @@ require 'spec_helper'
 
 module Beckett
   describe Document do
-    let(:document) { Document.new(content) }
-
     describe '#to_hash' do
-      let(:rendered) { json(document.to_hash) }
-
       context 'given ...' do
         let(:content)  { <<-CONTENT.strip_heredoc
           CONTENT
         }
 
         it 'renders' do
-          debug
-          expect(rendered).to eq(json({
+          expect(content).to render({
             root: {
               children: []
             }
-          }))
+          })
         end
       end
 
@@ -31,8 +26,7 @@ module Beckett
         }
 
         it 'renders' do
-          debug
-          expect(rendered).to eq(json({
+          expect(content).to render({
             root: {
               children: [
                 {
@@ -59,7 +53,7 @@ module Beckett
                 }
               ]
             }
-          }))
+          })
         end
       end
 
@@ -76,8 +70,7 @@ module Beckett
         }
 
         it 'renders' do
-          debug
-          expect(rendered).to eq(json({
+          expect(content).to render({
             root: {
               children: [
                 {
@@ -138,7 +131,7 @@ module Beckett
                 }
               ]
             }
-          }))
+          })
         end
       end
 
@@ -155,8 +148,7 @@ module Beckett
         }
 
         it 'renders' do
-          debug
-          expect(rendered).to eq(json({
+          expect(content).to render({
             root: {
               children: [
                 {
@@ -211,7 +203,7 @@ module Beckett
                 },
               ]
             }
-          }))
+          })
         end
       end
 
@@ -236,8 +228,7 @@ module Beckett
         }
 
         it 'renders' do
-          debug
-          expect(rendered).to eq(json({
+          expect(content).to render({
             root: {
               children: [
                 {
@@ -360,7 +351,7 @@ module Beckett
                 }
               ]
             }
-          }))
+          })
         end
       end
 
@@ -372,8 +363,7 @@ module Beckett
         }
 
         it 'renders' do
-          debug
-          expect(rendered).to eq(json({
+          expect(content).to render({
             root: {
               children:   [
                 {
@@ -418,7 +408,7 @@ module Beckett
                 }
               ]
             }
-          }))
+          })
         end
       end
 
@@ -439,8 +429,7 @@ module Beckett
         }
 
         it 'renders' do
-          debug
-          expect(rendered).to eq(json({
+          expect(content).to render({
             root: {
               children:   [
                 {
@@ -639,7 +628,7 @@ module Beckett
                 }
               ]
             }
-          }))
+          })
         end
       end
 
@@ -663,8 +652,7 @@ module Beckett
         }
 
         it 'renders' do
-          debug
-          expect(rendered).to eq(json({
+          expect(content).to render({
             root: {
               children: [
                 {
@@ -851,7 +839,7 @@ module Beckett
                 }
               ]
             }
-          }))
+          })
         end
       end
 
@@ -870,8 +858,7 @@ module Beckett
         }
 
         it 'renders' do
-          debug
-          expect(rendered).to eq(json({
+          expect(content).to render({
             root: {
               children: [
                 {
@@ -917,7 +904,7 @@ module Beckett
                 }
               ]
             }
-          }))
+          })
         end
       end
 
@@ -928,8 +915,7 @@ module Beckett
         }
 
         it 'renders' do
-          debug
-          expect(rendered).to eq(json({
+          expect(content).to render({
             root: {
               children: [
                 {
@@ -961,7 +947,7 @@ module Beckett
                 }
               ]
             }
-          }))
+          })
         end
       end
 
@@ -978,8 +964,7 @@ module Beckett
         }
 
         it 'renders' do
-          debug
-          expect(rendered).to eq(json({
+          expect(content).to render({
             root: {
               children: [
                 {
@@ -1079,7 +1064,7 @@ module Beckett
                 }
               ]
             }
-          }))
+          })
         end
       end
 
@@ -1095,8 +1080,7 @@ module Beckett
         }
 
         it 'renders' do
-          debug
-          expect(rendered).to eq(json({
+          expect(content).to render({
             root: {
               children: [
                 {
@@ -1203,7 +1187,7 @@ module Beckett
                 }
               ]
             }
-          }))
+          })
         end
       end
 
@@ -1217,8 +1201,7 @@ module Beckett
         }
 
         it 'renders' do
-          debug
-          expect(rendered).to eq(json({
+          expect(content).to render({
             root: {
               children: [
                 {
@@ -1285,7 +1268,7 @@ module Beckett
                 }
               ]
             }
-          }))
+          })
         end
       end
     end

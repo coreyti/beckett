@@ -9,10 +9,6 @@ module Support
     JSON.pretty_generate(object)
   end
 
-  def show(message, io = :stdout)
-    output(/#{Regexp.escape(message.strip_heredoc)}/).send(:"to_#{io}")
-  end
-
   private
 
   def debug?
