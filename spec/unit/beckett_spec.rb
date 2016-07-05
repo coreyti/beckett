@@ -1,5 +1,10 @@
 require 'spec_helper'
 
+# "HEADER"
+# :P
+# "SECTION"
+# "SECTION"
+
 module Beckett
   describe Document do
     describe '#to_hash' do

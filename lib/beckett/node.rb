@@ -12,11 +12,12 @@ module Beckett
 
     class Base
       $position = 0
-      attr_reader :node, :children, :position
+      attr_reader :node, :name, :children, :position
 
-      def initialize(node)
+      def initialize(node, options = {})
         @node     = node
         @children = []
+        @options  = options
         @position = $position
         $position += 1
       end
@@ -35,6 +36,14 @@ module Beckett
 
       def <<(nodes)
         @children += ([nodes].flatten)
+      end
+
+      def depth
+        @options[:depth] || 0
+      end
+
+      def name
+        node_name.to_s
       end
 
       private

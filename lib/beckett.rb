@@ -1,5 +1,6 @@
 require 'json'
 require 'kramdown'
+require 'kramdown/parser/gfm'
 
 require 'beckett/renderer'
 require 'beckett/node'
@@ -19,13 +20,16 @@ require 'beckett/node/br'
 module Beckett
   class Document
     def initialize(content)
-      @content = content
+      @document = Kramdown::Document.new(content, input: 'GFM')
     end
 
     def to_hash
-      document = Kramdown::Document.new(@content, input: 'GFM')
-      renderer = Renderer.send(:new, document.root)
-      renderer.convert(document.root)
+      renderer = Renderer.send(:new, @document.root)
+      renderer.convert(@document.root)
+    end
+
+    def to_html
+      @document.to_html
     end
 
     def to_json

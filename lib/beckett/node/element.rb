@@ -4,6 +4,7 @@ module Beckett
       {}.tap do |element|
         element[:node_name]  = node_name
         element[:node_type]  = node_type
+        element[:depth]      = depth
         # NOTE: might add attributes as `nil` or empty Hash at a later date...
         element[:attributes] = node_attributes if node_attributes
         element[:children]   = children.map(&:to_h)
@@ -18,10 +19,6 @@ module Beckett
         @node_attributes = nil if @node_attributes.empty?
       end
       @node_attributes
-    end
-
-    def node_name
-      @node_name ||= node.type.upcase
     end
 
     def node_type

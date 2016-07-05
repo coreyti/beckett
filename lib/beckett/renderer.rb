@@ -37,7 +37,17 @@ module Beckett
     # ---
 
     def build(node)
-      Node.find(node).new(node).tap do |result|
+      options = {}
+
+      if node.type == :li
+        options[:depth] = context.depth
+      end
+
+      if [:ol, :ul].include?(node.type) && context.name == 'LI'
+        options[:depth] = context.depth + 1
+      end
+
+      Node.find(node).new(node, options).tap do |result|
         push(result)
         inner(node)
         pop
@@ -54,7 +64,7 @@ module Beckett
       if level == 1
         Node::Article.new(node)
       else
-        Node::Section.new(node)
+        Node::Section.new(node, depth: level - 1)
       end
     end
 
