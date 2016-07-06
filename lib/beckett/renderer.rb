@@ -39,12 +39,12 @@ module Beckett
     def build(node)
       options = {}
 
-      if node.type == :li
-        options[:depth] = context.depth
-      end
-
       if [:ol, :ul].include?(node.type) && context.name == 'LI'
         options[:depth] = context.depth + 1
+      end
+
+      if node.type == :li
+        options[:depth] = context.depth
       end
 
       Node.find(node).new(node, options).tap do |result|
